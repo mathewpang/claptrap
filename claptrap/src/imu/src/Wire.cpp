@@ -7,7 +7,6 @@ unsigned long millis(){
 }
 
 TwoWire::TwoWire(){
-    read_buffer = (uint8_t*)malloc(25*sizeof(uint8_t));
     i2cFile = 0;
     std::cout << "Opening file\n";
     if((i2cFile = open(FILE_PATH, O_RDWR)) < 0){
@@ -15,6 +14,7 @@ TwoWire::TwoWire(){
       std::cout << "file open error\n";
       //printf(“Failed to open the i2c bus”);
     }
+
 }
 
 void TwoWire::helloWorld() {
@@ -26,31 +26,33 @@ void TwoWire::helloWorld() {
  *   Starts up i2c settings
  */
 void TwoWire::begin(){
-  std::cout << "Opening file\n";
-    if((i2cFile = open(FILE_PATH, O_RDWR)) < 0){
-    // ERROR HANDLING
-      std::cout << "file open error\n";
-      //printf(“Failed to open the i2c bus”);
-    }
 
 }
 
-int TwoWire::requestFrom(int address, int quantity){
+int TwoWire::requestFrom(int address, int quantity) {
+    //if (ioctl(i2cFile, I2C_SLAVE, address) < 0) {
+    //  printf(“i2cSetAddress”);
+    //  std::cout << "bus access error\n";
+    //}
+    std::cout << "ioctl-ed";
     int read_pointer = 0;
     int read_max = quantity;
     int count = 0;
-    while(count <= quantity){
-        int error = read(i2cFile, read_buffer+count, 1);
-        if(error == 1){
+    while(count < quantity) {
+        int error = read(i2cFile, read_buffer+count, 1 * sizeof(char));
+        if(error != -1) {
             count++;
+            std::cout << "Read: " << read_buffer[0] << "Error: " << error << "\n";
         }
         sleep(1);
-        if(error != 0){
-            std::cout << strerror(errno);  
+        if(error != 0 && error != 1){
+            std::cout << strerror(errno) << "Error: " << errno << "\n";
             std::cout << "\n";
         }
-        
+
     }
+    std::cout << "Read: " << read_buffer[0] << "\n";
+
     return quantity;
 
 }
@@ -59,10 +61,11 @@ int TwoWire::requestFrom(int address, int quantity){
  *  Takes in deviceAddress, opens file descriptor
  */
 void TwoWire::beginTransmission(int address){
-    if (ioctl(i2cFile, I2C_SLAVE, address) < 0) {
+  if (ioctl(i2cFile, I2C_SLAVE, address) < 0) {
       //printf(“i2cSetAddress”);
       std::cout << "bus access error\n";
-    }
+  }
+  std::cout << "ioctled";
 }
 
 /* endTransmission
@@ -71,7 +74,7 @@ void TwoWire::beginTransmission(int address){
 int TwoWire::endTransmission(){
 
     //close(i2cFile);
-
+    std::cout << "end Transmission\n";
 }
 
 /* write
@@ -82,11 +85,12 @@ int TwoWire::write(uint8_t byte){
         std::cout << "write error\n";
         return 0;
     }
+    std::cout << "Writing succeess\n";
     return 1;
 }
 
 /* send
-*   NOTE* send is exactly like write, 
+*   NOTE* send is exactly like write,
  *   however some Arduino code needs
 *    write and some needs send so both are here
 */
@@ -103,8 +107,8 @@ uint8_t TwoWire::receive(){
     if(read_pointer > read_max){
       return 0;
     }
-    uint8_t byte = read_buffer[read_pointer];
-    read_pointer ++; 
+    char byte = read_buffer[read_pointer];
+    read_pointer ++;
     return byte;
 }
 

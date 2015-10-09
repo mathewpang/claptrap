@@ -24,7 +24,7 @@ unsigned long millis();
 class TwoWire {
     public:
         TwoWire();
-        
+
         void     helloWorld(); //Practice
         void     begin();
         int      requestFrom(int address, int quantity);
@@ -39,7 +39,7 @@ class TwoWire {
 
     private:
         int i2cFile;
-        uint8_t* read_buffer;
+        char read_buffer[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         int read_pointer;
         int read_max;
 
