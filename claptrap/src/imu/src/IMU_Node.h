@@ -4,6 +4,7 @@
 #include "Wire.h"
 #include "Accelerometer.h"
 #include "Gyroscope.h"
+#include "imu/AccelGyro.h"
 #include <ros/ros.h>
 
 class IMU_Node{

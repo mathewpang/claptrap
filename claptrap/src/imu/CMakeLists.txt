@@ -44,6 +44,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
  add_message_files(
+   DIRECTORY 
+   msg
    FILES
    AccelGyro.msg
 )
@@ -110,8 +112,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
-include_directories(
+ include_directories(include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -131,14 +132,15 @@ include_directories(
                          src/Accelerometer.cpp
                          src/IMU_Node.cpp)
 
-## Add cmake target dependencies of the executable
-## same as for the library above
-# add_dependencies(imu_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
 ## Specify libraries to link a library or executable target against
  target_link_libraries(imu_node
    ${catkin_LIBRARIES}
  )
+
+## Add cmake target dependencies of the executable
+## same as for the library above
+ add_dependencies(imu_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 #############
 ## Install ##
