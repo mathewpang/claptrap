@@ -98,10 +98,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES imu
-#  CATKIN_DEPENDS roscpp
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES imu
+  CATKIN_DEPENDS roscpp
+  DEPENDS system_lib
 )
 
 ###########
@@ -126,16 +126,19 @@ include_directories(
 # add_dependencies(imu ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(imu_node src/imu_node.cpp)
+ add_executable(imu_node src/Wire.cpp
+                         src/Gyroscope.cpp
+                         src/Accelerometer.cpp
+                         src/IMU_Node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(imu_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(imu_node
-#   ${catkin_LIBRARIES}
-# )
+ target_link_libraries(imu_node
+   ${catkin_LIBRARIES}
+ )
 
 #############
 ## Install ##
