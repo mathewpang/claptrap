@@ -117,9 +117,11 @@ catkin_package(
 )
 
 ## Declare a C++ library
-# add_library(imu
-#   src/${PROJECT_NAME}/imu.cpp
-# )
+add_library(imu src/Wire.cpp
+                src/Gyroscope.cpp
+                src/Accelerometer.cpp
+                src/IMU_Node.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
