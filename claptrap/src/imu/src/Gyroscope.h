@@ -52,6 +52,9 @@
     } gyroRegisters_t;
 /*=========================================================================*/
 
+ #define GYRO_SENSITIVITY_250DPS  (0.00875F)    // Roughly 22/256 for fixed point match
+ #define SENSORS_DPS_TO_RADS               (0.017453293F)          /**< Degrees/s to rad/s multiplier */
+
 struct gyro{
   float gyro_x;
   float gyro_y;
@@ -68,4 +71,5 @@ class Gyroscope{
 		
     Wire* wire;
     struct gyro* raw_gyro;
+    struct gyro* prev_gyro;
 };

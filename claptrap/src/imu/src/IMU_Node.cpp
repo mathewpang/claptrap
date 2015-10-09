@@ -20,7 +20,10 @@ int main(int argc, char **argv) {
     while(ros::ok()){
         struct accel* accel_data = imu_node.accel->getAcceleration();
         std::cout << "accel_data x::" << accel_data->accel_x << "\naccel_data y::" << accel_data->accel_y << "\naccel_data z::" << accel_data->accel_z << "\n";
-    
+        
+        struct gyro* gyro_data = imu_node.gyro->getGyroData();
+        std::cout << "gyro_data x::" << gyro_data->gyro_x << "\ngyro_data y::" << gyro_data->gyro_y << "\ngyro_data z::" << gyro_data->gyro_z << "\n";
+        
         r.sleep();
     }    
     return 0;

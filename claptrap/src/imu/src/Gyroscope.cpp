@@ -8,7 +8,14 @@
 Gyroscope::Gyroscope(Wire* i2c_wire){
 	std::cout << "Starting Gyroscope\n";
 	wire = i2c_wire;
+	raw_gyro =  (struct gyro*)malloc(sizeof(struct gyro));
+    prev_gyro = (struct gyro*)malloc(sizeof(struct gyro));
+    
 	bool success = checkConnection();
+
+  	/* Reset then switch to normal mode and enable all three channels */
+  	wire->write(L3GD20_ADDRESS, GYRO_REGISTER_CTRL_REG1, 0x00);
+  	wire->write(L3GD20_ADDRESS, GYRO_REGISTER_CTRL_REG1, 0x0F);
 
 }
 
@@ -28,6 +35,10 @@ bool Gyroscope::checkConnection(){
 
 struct gyro* Gyroscope::getGyroData(){
 	getRawData();
+    prev_gyro->gyro_x = (float)raw_gyro->gyro_x * GYRO_SENSITIVITY_250DPS * SENSORS_DPS_TO_RADS;
+    prev_gyro->gyro_y = (float)raw_gyro->gyro_y * GYRO_SENSITIVITY_250DPS * SENSORS_DPS_TO_RADS;
+    prev_gyro->gyro_z = (float)raw_gyro->gyro_z * GYRO_SENSITIVITY_250DPS * SENSORS_DPS_TO_RADS;
+    
 	return raw_gyro;
 }
 

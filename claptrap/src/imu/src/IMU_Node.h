@@ -10,9 +10,9 @@ class IMU_Node{
 	public:
 		IMU_Node();
 		Accelerometer* accel;
+		Gyroscope* gyro;
 	private:
 		Wire* my_wire;
-		Gyroscope* gyro;
 		
 };
 

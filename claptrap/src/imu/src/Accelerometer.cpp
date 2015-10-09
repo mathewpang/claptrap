@@ -33,7 +33,7 @@ struct accel* Accelerometer::getAcceleration(){ //Converted value from raw data
     getRawData();
     prev_accel->accel_x = raw_accel->accel_x * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
     prev_accel->accel_y = raw_accel->accel_y * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-    prev_accel->accel_x = raw_accel->accel_z * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+    prev_accel->accel_z = raw_accel->accel_z * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
     return prev_accel;
 }
 
