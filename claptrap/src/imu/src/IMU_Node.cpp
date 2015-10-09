@@ -9,16 +9,19 @@ IMU_Node::IMU_Node(){
 
 
 int main(int argc, char **argv) {
-    //Wire my_wire = Wire();
-    //my_wire.helloWorld();
     ros::init(argc, argv, "imu_node");
     ros::start();
-    ROS_INFO_STREAM("HELLO< WORLD");
+    
+    ros::Rate r(10);
+    
+    ROS_INFO_STREAM("Starting imu_node....");
     IMU_Node imu_node = IMU_Node();
     
-    struct accel* accel_data = imu_node.accel->getRawData();
-    std::cout << "accel_data ::" << accel_data->accel_x << accel_data->accel_y << accel_data->accel_z << "\n";
-    // ros::Rate r(10);
-    // r.sleep();
+    while(ros::ok()){
+        struct accel* accel_data = imu_node.accel->getAcceleration();
+        std::cout << "accel_data x::" << accel_data->accel_x << "\naccel_data y::" << accel_data->accel_y << "\naccel_data z::" << accel_data->accel_z << "\n";
+    
+        r.sleep();
+    }    
     return 0;
 }

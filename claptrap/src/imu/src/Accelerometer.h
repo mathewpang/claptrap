@@ -7,6 +7,8 @@
     #define LSM303_ADDRESS_MAG            (0x3C >> 1)         // 0011110x
 /*=========================================================================*/
 
+    #define SENSORS_GRAVITY_STANDARD      (9.80665F)          /**< Earth's gravity in m/s^2 */
+
 /*=========================================================================
     REGISTERS
     -----------------------------------------------------------------------*/
@@ -45,20 +47,21 @@
     } lsm303AccelRegisters_t;
 
 struct accel{
-  int16_t accel_x;
-  int16_t accel_y;
-  int16_t accel_z;
+  float accel_x;
+  float accel_y;
+  float accel_z;
 };
 
 
 class Accelerometer{
 	public:
 		Accelerometer(Wire* wire);
-    struct accel* getRawData(); //Gets raw data from Accelerometer MAKE THIS PRIVATE TESTING ONLY
+    struct accel* getAcceleration(); //Converted value from raw data
 	private:
 		bool checkConnection(); //Checks if Accelerometer is connected to Beaglebone
-    //struct accel* getRawData(); //Gets raw data from Accelerometer
+    void getRawData(); //Stores raw data into raw_accelfrom Accelerometer
 
 		Wire* wire;
 		struct accel* raw_accel;
+    struct accel* prev_accel;
 };

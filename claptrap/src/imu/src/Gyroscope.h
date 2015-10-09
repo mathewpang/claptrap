@@ -53,18 +53,19 @@
 /*=========================================================================*/
 
 struct gyro{
-  uint8_t gyro_x;
-  uint8_t gyro_y;
-  uint8_t gyro_z;
+  float gyro_x;
+  float gyro_y;
+  float gyro_z;
 };
 
 class Gyroscope{
 	public:
-		Gyroscope(Wire* wire);
-
+		  Gyroscope(Wire* wire);
+      struct gyro* getGyroData(); //Converted value from raw data
 	private:
 		bool checkConnection();
     void getRawData();
-		Wire* wire;
-
+		
+    Wire* wire;
+    struct gyro* raw_gyro;
 };
