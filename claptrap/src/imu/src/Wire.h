@@ -16,13 +16,15 @@
 
 #include <ros/ros.h>
 
-#define FILE_PATH "dev/i2c-2"
+#define FILE_PATH "/dev/i2c-2"
 typedef unsigned char byte;
 
 unsigned long millis();
 
 class TwoWire {
     public:
+        TwoWire();
+        
         void     helloWorld(); //Practice
         void     begin();
         int      requestFrom(int address, int quantity);
@@ -37,6 +39,9 @@ class TwoWire {
 
     private:
         int i2cFile;
+        uint8_t* read_buffer;
+        int read_pointer;
+        int read_max;
 
 };
 

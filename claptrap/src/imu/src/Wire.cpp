@@ -6,6 +6,17 @@ unsigned long millis(){
   return 0;
 }
 
+TwoWire::TwoWire(){
+    read_buffer = (uint8_t*)malloc(25*sizeof(uint8_t));
+    i2cFile = 0;
+    std::cout << "Opening file\n";
+    if((i2cFile = open(FILE_PATH, O_RDWR)) < 0){
+    // ERROR HANDLING
+      std::cout << "file open error\n";
+      //printf(“Failed to open the i2c bus”);
+    }
+}
+
 void TwoWire::helloWorld() {
    //printf("Hello World!");
     std::cout << "Hello World from TwoWire universe\n";
@@ -15,31 +26,42 @@ void TwoWire::helloWorld() {
  *   Starts up i2c settings
  */
 void TwoWire::begin(){
+  std::cout << "Opening file\n";
+    if((i2cFile = open(FILE_PATH, O_RDWR)) < 0){
+    // ERROR HANDLING
+      std::cout << "file open error\n";
+      //printf(“Failed to open the i2c bus”);
+    }
 
 }
 
 int TwoWire::requestFrom(int address, int quantity){
-    if((i2cFile = open(FILE_PATH, O_RDWR)) < 0){
-        // ERROR HANDLING
-        //   perror(“Failed to open the i2c bus”);
+    int read_pointer = 0;
+    int read_max = quantity;
+    int count = 0;
+    while(count <= quantity){
+        int error = read(i2cFile, read_buffer+count, 1);
+        if(error == 1){
+            count++;
+        }
+        sleep(1);
+        if(error != 0){
+            std::cout << strerror(errno);  
+            std::cout << "\n";
+        }
+        
     }
-    if (ioctl(i2cFile, I2C_SLAVE, address) < 0) {
-      //perror(“i2cSetAddress”);
-      //exit(1);
-    }
+    return quantity;
+
 }
 
 /* beginTransmission
  *  Takes in deviceAddress, opens file descriptor
  */
 void TwoWire::beginTransmission(int address){
-    if((i2cFile = open(FILE_PATH, O_RDWR)) < 0){
-    // ERROR HANDLING
-     //   perror(“Failed to open the i2c bus”);
-    }
     if (ioctl(i2cFile, I2C_SLAVE, address) < 0) {
-      //perror(“i2cSetAddress”);
-      exit(1);
+      //printf(“i2cSetAddress”);
+      std::cout << "bus access error\n";
     }
 }
 
@@ -47,7 +69,9 @@ void TwoWire::beginTransmission(int address){
  *   close i2cFile
  */
 int TwoWire::endTransmission(){
-    close(i2cFile);
+
+    //close(i2cFile);
+
 }
 
 /* write
@@ -56,7 +80,9 @@ int TwoWire::endTransmission(){
 int TwoWire::write(uint8_t byte){
     if(::write(i2cFile, &byte , 1) != 1) {
         std::cout << "write error\n";
+        return 0;
     }
+    return 1;
 }
 
 /* send
@@ -70,16 +96,15 @@ int TwoWire::send(uint8_t byte){
 
 
 int TwoWire::available(){
-    struct stat st;
-    fstat(i2cFile, &st);
-    return st.st_size;
+    return read_max - read_pointer;
 }
 
 uint8_t TwoWire::receive(){
-    uint8_t byte = 0x0;
-    if(::read(i2cFile, &byte, 1) != 1){
-       std::cout << "read error\n";
+    if(read_pointer > read_max){
+      return 0;
     }
+    uint8_t byte = read_buffer[read_pointer];
+    read_pointer ++; 
     return byte;
 }
 
