@@ -1,0 +1,12 @@
+[submodule "claptrap/src/imu/src/Adafruit_LSM303DLHC"]
+	path = claptrap/src/imu/src/Adafruit_LSM303DLHC
+	url = git@github.com:adafruit/Adafruit_LSM303DLHC.git
+[submodule "claptrap/src/imu/src/Adafruit_L3GD20_U"]
+	path = claptrap/src/imu/src/Adafruit_L3GD20_U
+	url = git@github.com:adafruit/Adafruit_L3GD20_U.git
+[submodule "claptrap/src/imu/src/Adafruit_9DOF"]
+	path = claptrap/src/imu/src/Adafruit_9DOF
+	url = git@github.com:adafruit/Adafruit_9DOF.git
+[submodule "claptrap/src/imu/src/Adafruit_Sensor"]
+	path = claptrap/src/imu/src/Adafruit_Sensor
+	url = git@github.com:adafruit/Adafruit_Sensor.git
