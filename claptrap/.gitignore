@@ -52,3 +52,15 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+.catkin_workspace
+
+# Catkin Build files
+src/imu/CMakeCache.txt
+src/imu/CMakeFiles/
+src/imu/CTestTestfile.cmake
+src/imu/Makefile
+src/imu/catkin/
+src/imu/catkin_generated/
+src/imu/cmake_install.cmake
+src/imu/devel/
+src/imu/gtest/

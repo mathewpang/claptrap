@@ -2,7 +2,7 @@
 
 void Wire::helloWorld() {
    //printf("Hello World!");
-    std::cout << "Hello World\n";
+    std::cout << "Hello World from Wire universe\n";
 }
 
 /* begin
@@ -75,13 +75,6 @@ void Wire::onRequest(void(*handler) (void)){
 
 } //Unused
 
-
-
-int main(int argc, char **argv) {
-    Wire my_wire = Wire();
-    my_wire.helloWorld();
-
-}
 
 
 
