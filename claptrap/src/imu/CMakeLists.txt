@@ -130,7 +130,11 @@ include_directories(
 
 ## Declare a C++ executable
 add_executable(imu_node src/IMU_Node.cpp
-                        src/Wire.cpp)
+                        src/Wire.cpp
+                        src/Adafruit_LSM303DLHC/Adafruit_LSM303_U.cpp
+                        src/Adafruit_L3GD20_U/Adafruit_L3GD20_U.cpp
+                        src/Adafruit_9DOF/Adafruit_9DOF.cpp)
+
 
 
 ## Add cmake target dependencies of the executable

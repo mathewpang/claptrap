@@ -16,6 +16,7 @@
 #include <ros/ros.h>
 
 #define FILE_PATH "dev/i2c-2"
+typedef unsigned char byte;
 
 class Wire {
     public:
