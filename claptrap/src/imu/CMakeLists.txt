@@ -110,12 +110,13 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-  src/Adafruit_LSM303DLHC
-  src/Adafruit_L3GD20_U
-  src/Adafruit_Sensor
+include_directories(include
+                    ${catkin_INCLUDE_DIRS}
+                    src
+                    src/Adafruit_LSM303DLHC
+                    src/Adafruit_L3GD20_U
+                    src/Adafruit_Sensor
+                    src/Adafruit_9DOF
 )
 
 ## Declare a C++ library
