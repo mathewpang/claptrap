@@ -6,9 +6,13 @@
 class MotorDriver {
     public:
         MotorDriver();
+        void forward(int speed);
+        void turn(int speed);
+        void test();
+        void stop();
+    private:
         Motor* leftMotor;
         Motor* rightMotor;
-    private:
 };
 
 #endif
