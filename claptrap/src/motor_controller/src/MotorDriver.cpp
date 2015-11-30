@@ -47,7 +47,28 @@ void MotorDriver::test() {
     stop();
 }
 
-int main() {
+void MotorDriver::callback(const geometry_msgs::Twist& msg) {
+    ROS_INFO("Got a Message!");
+
+    if (abs(msg.angular.z) > 0.01) {
+        turn(msg.angular.z);
+    } else if (abs(msg.linear.x) > 0.01) {
+        forward(msg.linear.x);
+    } else {
+        stop();
+    }
+}
+
+int main(int argc, char **argv) {
     MotorDriver driver = MotorDriver();
-    driver.test();
+
+    ros::init(argc, argv, "motor_controller");
+    ROS_INFO_STREAM("HELLO WORLD from motor_controller");
+    ros::NodeHandle n;
+
+    ros::Subscriber motor_sub = n.subscribe("cmd_vel", 1, &MotorDriver::callback, &driver);
+
+    ros::spin();
+
+    return 0;
 }
