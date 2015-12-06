@@ -7,12 +7,9 @@ project(lin_quad_reg)
 find_package(catkin REQUIRED
 			 roscpp
 			 std_msgs
-<<<<<<< HEAD
 			 message_generation
 			 imu)
-=======
-			 message_generation)
->>>>>>> c8a76f128dc92a76124eb1bea9593ddeaded9cb0
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
