@@ -1,5 +1,6 @@
 #include "LQRNode.h"
 
+
 LQRNode::LQRNode(IMUObserver* observer){
 	this->observer = observer;
 }
@@ -33,3 +34,4 @@ int main(int argc, char **argv) {
     
     return 0;
 }
+

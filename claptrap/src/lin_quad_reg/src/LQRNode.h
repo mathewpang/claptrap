@@ -12,6 +12,7 @@ class LQRNode{
 		void computeLQR();
 	private:
 		IMUObserver* observer; 
+
 	
 };
 

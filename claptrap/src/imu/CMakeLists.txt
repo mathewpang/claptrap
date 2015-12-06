@@ -44,6 +44,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
  add_message_files(
+   DIRECTORY 
+   msg
    FILES
    AccelGyro.msg
 )
@@ -110,18 +112,25 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
-include_directories(
+ include_directories(include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
+<<<<<<< HEAD
  add_library(imu
                 src/Wire.cpp
                 src/Gyroscope.cpp
                 src/Accelerometer.cpp
                 src/IMU_Node.cpp
  )
+=======
+add_library(imu src/Wire.cpp
+                src/Gyroscope.cpp
+                src/Accelerometer.cpp
+                src/IMU_Node.cpp
+)
+>>>>>>> c8a76f128dc92a76124eb1bea9593ddeaded9cb0
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -134,14 +143,22 @@ include_directories(
                          src/Accelerometer.cpp
                          src/IMU_Node.cpp)
 
+<<<<<<< HEAD
 ## Add cmake target dependencies of the executable
 ## same as for the library above
  add_dependencies(imu_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+=======
+>>>>>>> c8a76f128dc92a76124eb1bea9593ddeaded9cb0
 ## Specify libraries to link a library or executable target against
  target_link_libraries(imu_node
    ${catkin_LIBRARIES}
  )
+
+## Add cmake target dependencies of the executable
+## same as for the library above
+ add_dependencies(imu_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 #############
 ## Install ##
