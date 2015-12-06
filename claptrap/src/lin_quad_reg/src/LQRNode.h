@@ -8,9 +8,10 @@
 class LQRNode{
 	
 	public:
-		LQRNode();
+		LQRNode(IMUObserver* observer);
+		void computeLQR();
 	private:
-
+		IMUObserver* observer; 
 	
 };
 
