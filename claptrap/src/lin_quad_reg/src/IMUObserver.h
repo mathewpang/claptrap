@@ -4,12 +4,10 @@
 #include <ros/ros.h>
 #include "imu/AccelGyro.h"
 
+#define PI 3.14159265F
 struct orientation{
   float roll;
   float roll_d;
-  float roll_dd;
-  float pitch;
-  float pitch_d;
 };
 
 struct accel{
