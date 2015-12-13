@@ -100,7 +100,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES imu
-  CATKIN_DEPENDS roscpp message_runtime 
+  CATKIN_DEPENDS roscpp message_runtime
   DEPENDS system_lib
 )
 

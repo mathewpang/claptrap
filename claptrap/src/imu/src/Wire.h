@@ -15,7 +15,7 @@
 
 #include <ros/ros.h>
 
-#define FILE_PATH "/dev/i2c-2"
+#define FILE_PATH "/dev/i2c-1"
 
 class Wire{
     public:

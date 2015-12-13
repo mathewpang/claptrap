@@ -11,8 +11,11 @@ Motor::Motor(const char* device) {
     options.c_oflag &= ~(ONLCR | OCRNL);
     options.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     tcsetattr(file, TCSANOW, &options);
-
     int response = exitSafeStart();
+    wheelAngle = 0;
+    wheelSpeed = getCurrentSpeed();
+    lastSpeedChange = ros::Time::now();
+    ROS_INFO_STREAM("Motor starts up successfully!");
 }
 
 
@@ -24,6 +27,7 @@ int Motor::exitSafeStart() {
         std::cout << "Error starting motor.";
         return SERIAL_ERROR;
     }
+    ROS_INFO_STREAM("Enable motor");
     return 0;
 }
 
@@ -36,6 +40,9 @@ int Motor::getTargetSpeed() {
 
 int Motor::getCurrentSpeed() {
   int val = getVariable(21);
+  if(val > 32767){
+    val -= 65536;
+  }
   return (signed short) val;
 }
 
@@ -52,7 +59,6 @@ int Motor::getVariable(uint8_t variableId) {
         std::cout << "Error writing.";
         return SERIAL_ERROR;
     }
- 
     uint8_t response[2];
     if(read(file,response,2) != 2) {
         std::cout << "Error reading.";
@@ -60,11 +66,13 @@ int Motor::getVariable(uint8_t variableId) {
     }
   return response[0] + 256*response[1];
 }
- 
+
 
 // Sets the SMC's target speed (-100).
 // Returns 0 if successful, SERIAL_ERROR if there was an error sending.
 int Motor::setSpeed(int speed) {
+    int currentSpeed = getCurrentSpeed();
+
     uint8_t command[3];
     if (speed < 0) {
         command[0] = MOTOR_REV; // Motor Reverse
@@ -74,11 +82,17 @@ int Motor::setSpeed(int speed) {
     }
     command[1] = 0x00;
     command[2] = speed;
- 
+
     if (write(file, command, sizeof(command)) == -1)  {
         std::cout << "Error writing.";
         return SERIAL_ERROR;
     }
+    // Set Angle of rotation and wheel speed
+    ros::Time currentTime = ros::Time::now();
+    double delta = (currentTime - lastSpeedChange).toSec();
+    wheelAngle = wheelAngle + currentSpeed*DEGREE_MOTOR_SPEED_CONVERSION*delta;
+    wheelSpeed = currentSpeed*DEGREE_MOTOR_SPEED_CONVERSION;
+    lastSpeedChange = currentTime;
     return 0;
 }
 
@@ -91,7 +105,7 @@ int Motor::setBrake(int brake) {
         brake = 32;
     }
     command[1] = brake;
- 
+
     if (write(file, command, sizeof(command)) == -1)  {
         std::cout << "Error writing.";
         return SERIAL_ERROR;

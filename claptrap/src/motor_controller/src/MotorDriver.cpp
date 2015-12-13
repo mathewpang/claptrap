@@ -1,8 +1,20 @@
 #include "MotorDriver.h"
 
+MotorDriver* MotorDriver::m_Instance = NULL;
+
 MotorDriver::MotorDriver() {
-    leftMotor = new Motor("/dev/ttyO2");
-    rightMotor = new Motor("/dev/ttyO1");
+    ROS_INFO_STREAM("Motor starts up successfully!2");
+    rightMotor = new Motor("/dev/ttyACM0");
+    curr_wheel_state = (struct wheel_state*) malloc(sizeof(struct wheel_state));
+
+
+}
+
+MotorDriver* MotorDriver::Instance(){
+    if(!m_Instance){
+        m_Instance = new MotorDriver();
+    }
+    return m_Instance;
 }
 
 void MotorDriver::forward(int speed) {
@@ -11,7 +23,6 @@ void MotorDriver::forward(int speed) {
     } else if (speed < -100) {
         speed = -100;
     }
-    leftMotor->setSpeed(speed);
     rightMotor->setSpeed(speed);
 }
 
@@ -21,13 +32,10 @@ void MotorDriver::turn(int speed) {
     } else if (speed < -100) {
         speed = -100;
     }
-    int leftSpeed = -1*speed;
-    leftMotor->setSpeed(leftSpeed);
     rightMotor->setSpeed(speed);
 }
 
 void MotorDriver::stop() {
-    leftMotor->setSpeed(0);
     rightMotor->setSpeed(0);
 }
 
@@ -47,28 +55,61 @@ void MotorDriver::test() {
     stop();
 }
 
-void MotorDriver::callback(const geometry_msgs::Twist& msg) {
-    ROS_INFO("Got a Message!");
+void MotorDriver::updateWheelState() {
+    // Currently just uses right motor states, change the relationship here
+    curr_wheel_state->wheelAngle = rightMotor->wheelAngle;
+    curr_wheel_state->wheelSpeed = rightMotor->wheelSpeed;
+}
 
-    if (abs(msg.angular.z) > 0.01) {
+void MotorDriver::publishWheelState(ros::Publisher* pub) {
+    updateWheelState();
+    motor_controller::WheelState msg;
+    //msg.wheel_angle = curr_wheel_state->wheelAngle;
+    msg.wheel_angle = 0;
+    msg.wheel_speed = curr_wheel_state->wheelSpeed;
+    pub->publish(msg);
+}
+
+void MotorDriver::callback(const geometry_msgs::Twist& msg) {
+    ROS_INFO_STREAM("callback in motor\n");
+    if (abs(msg.angular.z) > 4) {
         turn(msg.angular.z);
-    } else if (abs(msg.linear.x) > 0.01) {
+    } else if (abs(msg.linear.x) > 4) {
         forward(msg.linear.x);
     } else {
         stop();
     }
 }
 
+
+void motorSIGINTHandler(int sig){
+    MotorDriver* m = MotorDriver::Instance();
+    m->forward(0);
+    ROS_INFO_STREAM("Shutting down\n");
+    ros::shutdown();
+}
+
+
 int main(int argc, char **argv) {
-    MotorDriver driver = MotorDriver();
 
     ros::init(argc, argv, "motor_controller");
-    ROS_INFO_STREAM("HELLO WORLD from motor_controller");
     ros::NodeHandle n;
+    ROS_INFO_STREAM("HELLO WORLD from motor_controller");
+    ros::Rate loop_rate(100);
+ROS_INFO_STREAM("Motor starts up successfully!4");
+    MotorDriver* driver = MotorDriver::Instance();
+ROS_INFO_STREAM("Motor starts up successfully!3");
+    ros::Subscriber motor_sub = n.subscribe("cmd_vel", 1, &MotorDriver::callback, driver);
+    ros::Publisher motor_pub = n.advertise<motor_controller::WheelState>("wheel_state", 1);
+    ROS_INFO_STREAM("MotorDriver setup finished");
 
-    ros::Subscriber motor_sub = n.subscribe("cmd_vel", 1, &MotorDriver::callback, &driver);
+    signal(SIGINT, motorSIGINTHandler);
 
-    ros::spin();
+    while (ros::ok()) {
+        driver->publishWheelState(&motor_pub);
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
 
     return 0;
 }

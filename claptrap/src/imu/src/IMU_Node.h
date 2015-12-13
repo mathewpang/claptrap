@@ -8,13 +8,13 @@
 #include <ros/ros.h>
 
 class IMU_Node{
-	public:
-		IMU_Node();
-		Accelerometer* accel;
-		Gyroscope* gyro;
-	private:
-		Wire* my_wire;
-		
+    public:
+        IMU_Node();
+        Accelerometer* accel;
+        Gyroscope* gyro;
+    private:
+        Wire* my_wire;
+
 };
 
 #endif
